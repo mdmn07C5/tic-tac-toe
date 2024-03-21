@@ -3,7 +3,13 @@ const Gameboard = function () {
         [' ',' ',' '],
         [' ',' ',' '],
         [' ',' ',' ']
-    ];
+    ]
+    
+    const newBoard = () => {
+        board.forEach(row => {
+            row.fill(' ', 0, 2);
+        });
+    }
 
     const printToConsole = () => {
         board.forEach((row) => {
@@ -23,7 +29,7 @@ const Gameboard = function () {
         return row_win || col_win;
     }
 
-    return { printToConsole, markPosition, isWon }
+    return { printToConsole, markPosition, isWon, newBoard }
 }();
 
 const Gameloop = function () {
@@ -38,5 +44,7 @@ Gameboard.markPosition('x', 0, 0);
 Gameboard.markPosition('x', 1, 0);
 Gameboard.markPosition('x', 2, 0);
 Gameboard.markPosition('o', 1, 1);
+Gameboard.printToConsole();
+Gameboard.newBoard()
 Gameboard.printToConsole();
 console.log(Gameboard.isWon(0, 2));
