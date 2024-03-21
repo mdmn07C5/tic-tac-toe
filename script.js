@@ -40,16 +40,14 @@ const Gameloop = function () {
     
 }();
 
-function createPlayer () {
+function createPlayer (name, mark) {
+    let score = 0;
+    
+    const getScore = () => { return score };
 
+    const increaseScore = () => {
+        score += 1;
+    }
+
+    return { name, increaseScore, getScore, mark }
 };
-
-Gameboard.markPosition('x', 0, 0);
-Gameboard.markPosition('x', 1, 1);
-Gameboard.markPosition('x', 2, 2);
-Gameboard.markPosition('o', 1, 0);
-Gameboard.printToConsole();
-console.log("new board");
-Gameboard.newBoard();
-Gameboard.printToConsole();
-console.log(Gameboard.isWon(0, 2));
