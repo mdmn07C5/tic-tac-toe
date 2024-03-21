@@ -51,3 +51,11 @@ function createPlayer (name, mark) {
 
     return { name, increaseScore, getScore, mark }
 };
+
+p1 = createPlayer('peepee', 'x');
+p2 = createPlayer('poopoo', 'o');
+p1.increaseScore();
+p1.increaseScore();
+p2.increaseScore();
+console.log(`${p1.name}'s (${p1.mark}) score: ${p1.getScore()}`);
+console.log(`${p2.name}'s (${p2.mark}) score: ${p2.getScore()}`);
