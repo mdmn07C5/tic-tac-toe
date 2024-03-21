@@ -1,5 +1,5 @@
 const Gameboard = function () {
-    let board = [
+    const board = [
         [' ',' ',' '],
         [' ',' ',' '],
         [' ',' ',' ']
@@ -7,7 +7,7 @@ const Gameboard = function () {
     
     const newBoard = () => {
         board.forEach(row => {
-            row.fill(' ', 0, 2);
+            row.fill(' ');
         });
     }
 
@@ -48,5 +48,8 @@ Gameboard.markPosition('x', 0, 0);
 Gameboard.markPosition('x', 1, 1);
 Gameboard.markPosition('x', 2, 2);
 Gameboard.markPosition('o', 1, 0);
+Gameboard.printToConsole();
+console.log("new board");
+Gameboard.newBoard();
 Gameboard.printToConsole();
 console.log(Gameboard.isWon(0, 2));
