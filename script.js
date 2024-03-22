@@ -21,15 +21,16 @@ const Gameboard = function () {
         if (board[x][y] === ' ') board[x][y] = mark;
     }
 
-    const isWon = (x, y) => {
-        rowWin = board[x][0] === board[x][1] && board[x][1] === board[x][2];
-
-        colWin = board[0][y] === board[1][y] && board[1][y] === board[2][y];
-
-        diagLWin = board[0][0] === board[1][1] &&  board[1][1] ===  board[2][2];
-
-        diagRWin = board[0][2] === board[1][1] && board[1][1] === board[2][0];
-
+    const isWon = (mark, x, y) => {
+        const rowWin = board[x][0] === mark && board[x][1] === mark && board[x][2] === mark;
+        if (rowWin) console.log("row");
+        const colWin = board[0][y] === mark && board[1][y] === mark && board[2][y] === mark;
+        if (colWin) console.log("col");
+        const diagLWin = board[0][0] === mark && board[1][1] === mark && board[2][2] === mark;
+        if (diagLWin) console.log("diagL");    
+        const diagRWin = board[0][2] === mark && board[1][1] === mark && board[2][0] === mark;
+        if (diagRWin) console.log("diagR");
+        
         return rowWin || colWin || diagLWin || diagRWin;
     }
 
@@ -37,6 +38,36 @@ const Gameboard = function () {
 }();
 
 const Gameloop = function () {
+    // temporary
+    p1 = createPlayer('p1', 'x');
+    p2 = createPlayer('p2', 'o');
+    const players = [ p1, p2 ];
+    let idx = Math.round(Math.random());
+
+    Gameboard.printToConsole();
+
+    for (let i = 0; i < 10; i++) {
+        const currentPlayer = players[idx];
+        let input = prompt(`${currentPlayer.name}'s turn,
+enter x, y coordinate: `);
+        let [ x, y ] = input.split(' ');
+        x = Number.parseInt(x);
+        y = Number.parseInt(y);
+        console.log(x, y);
+        Gameboard.markPosition(currentPlayer.mark, x, y);
+
+        if (Gameboard.isWon(currentPlayer.mark, x, y)) {
+            console.log('Game Over');
+            currentPlayer.increaseScore();
+            break;
+        }
+
+        console.log('=========')
+        Gameboard.printToConsole();
+        idx = (idx + 1) % 2;
+    }
+
+    console.log(`p1: ${p1.getScore()}, p2: ${p1.getScore()}`)
     
 }();
 
@@ -51,11 +82,3 @@ function createPlayer (name, mark) {
 
     return { name, increaseScore, getScore, mark }
 };
-
-p1 = createPlayer('peepee', 'x');
-p2 = createPlayer('poopoo', 'o');
-p1.increaseScore();
-p1.increaseScore();
-p2.increaseScore();
-console.log(`${p1.name}'s (${p1.mark}) score: ${p1.getScore()}`);
-console.log(`${p2.name}'s (${p2.mark}) score: ${p2.getScore()}`);
