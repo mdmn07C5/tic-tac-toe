@@ -41,6 +41,7 @@ const DisplayController = function () {
     const resultContainer = document.querySelector("#header");
     
     const initBoard = (gameEvent) => {
+        displayGameBoard.innerHTML = '';
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 const button = document.createElement('button');
@@ -120,7 +121,15 @@ function createPlayer (name, mark) {
         score += 1;
     }
 
-    return { name, increaseScore, getScore, mark }
+    const setName = (newName) => {
+        name = newName;
+    }
+
+    return { name, increaseScore, getScore, mark, setName }
 };
 
 GameController.newRound(createPlayer('p1', 'x'), createPlayer('p2', 'o'));
+
+document.querySelector('#new-game-button').addEventListener('click', () => {
+    GameController.newRound(createPlayer('p1', 'x'), createPlayer('p2', 'o'));
+})
