@@ -37,38 +37,32 @@ const Gameboard = function () {
     return { printToConsole, markPosition, isWon, newBoard }
 }();
 
-const Gameloop = function () {
-    // temporary
-    p1 = createPlayer('p1', 'x');
-    p2 = createPlayer('p2', 'o');
-    const players = [ p1, p2 ];
-    let idx = Math.round(Math.random());
+const GameController = function () {
+    let players = [];
+    let currentPlayerIndex = Math.round(Math.random());
+    let currentPlayer = players[currentPlayerIndex];
 
-    Gameboard.printToConsole();
-
-    for (let i = 0; i < 10; i++) {
-        const currentPlayer = players[idx];
-        let input = prompt(`${currentPlayer.name}'s turn,
-enter x, y coordinate: `);
-        let [ x, y ] = input.split(' ');
-        x = Number.parseInt(x);
-        y = Number.parseInt(y);
-        console.log(x, y);
-        Gameboard.markPosition(currentPlayer.mark, x, y);
-
-        if (Gameboard.isWon(currentPlayer.mark, x, y)) {
-            console.log('Game Over');
-            currentPlayer.increaseScore();
-            break;
-        }
-
-        console.log('=========')
-        Gameboard.printToConsole();
-        idx = (idx + 1) % 2;
+    const newRound = (player1, player2) => {
+        Gameboard.newBoard();
+        players = [player1, player2];
+        currentPlayerIndex = Math.round(Math.random());
     }
 
-    console.log(`p1: ${p1.getScore()}, p2: ${p1.getScore()}`)
-    
+    const playTurn = (x, y) => {
+        const x = Number.parseInt(x);
+        const y = Number.parseInt(y);
+
+        Gameboard.markPosition(currentPlayer.mark, x, y);
+        
+        if (Gameboard.isWon(currentPlayer.mark, x, y)) {
+            
+            console.log(`${currentPlayer} (${currentPlayer.mark}) wins`);
+        }
+
+        currentPlayerIndex = (currentPlayerIndex + 1) % 2;
+    }
+
+    return { newRound, playTurn }
 }();
 
 function createPlayer (name, mark) {
@@ -82,3 +76,5 @@ function createPlayer (name, mark) {
 
     return { name, increaseScore, getScore, mark }
 };
+
+Game.newRound(createPlayer('p1', 'x'), createPlayer('p2', 'o'));
