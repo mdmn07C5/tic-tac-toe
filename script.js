@@ -23,13 +23,12 @@ const Gameboard = function () {
 
     const isWon = (mark, x, y) => {
         const rowWin = board[x][0] === mark && board[x][1] === mark && board[x][2] === mark;
-        if (rowWin) console.log("row");
+       
         const colWin = board[0][y] === mark && board[1][y] === mark && board[2][y] === mark;
-        if (colWin) console.log("col");
+       
         const diagLWin = board[0][0] === mark && board[1][1] === mark && board[2][2] === mark;
-        if (diagLWin) console.log("diagL");    
+
         const diagRWin = board[0][2] === mark && board[1][1] === mark && board[2][0] === mark;
-        if (diagRWin) console.log("diagR");
         
         return rowWin || colWin || diagLWin || diagRWin;
     }
@@ -48,11 +47,13 @@ const GameController = function () {
         currentPlayerIndex = Math.round(Math.random());
     }
 
-    const playTurn = (xstr, ystr) => {
+    const playTurn = (xstr, ystr, callback) => {
         const x = Number.parseInt(xstr);
         const y = Number.parseInt(ystr);
+        currentPlayer = players[currentPlayerIndex];
 
         Gameboard.markPosition(currentPlayer.mark, x, y);
+        callback(currentPlayer.mark);
         
         if (Gameboard.isWon(currentPlayer.mark, x, y)) {
             
@@ -65,7 +66,7 @@ const GameController = function () {
     return { newRound, playTurn }
 }();
 
-const DisplayController = function () {
+const DisplayController = function (gameController) {
     const displayGameBoard = document.querySelector("#game-board");
     
     const initBoard = () => {
@@ -76,6 +77,12 @@ const DisplayController = function () {
                 button.setAttribute('id', `cell-${i}-${j}`)
                 button.textContent = ' ';
                 displayGameBoard.appendChild(button);
+
+                button.addEventListener('click', () => {
+                    gameController.playTurn(i, j, (mark) => {
+                        updateCell(mark, i, j);
+                    });
+                });
             }
         }
     }
@@ -87,7 +94,7 @@ const DisplayController = function () {
 
     return { initBoard, updateCell }
 
-}();
+}(GameController);
 
 function createPlayer (name, mark) {
     let score = 0;
