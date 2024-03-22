@@ -30,7 +30,9 @@ body {
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     gap: .5em;
-    padding: .5em;
+
+    background-color: black;
+    border-left: 10px solid white;
 }
 
 #p1 {
@@ -54,6 +56,8 @@ body {
 #footer {
     grid-column: 1 / 4;
     grid-row: 3 / 4;
+    display: grid;
+    justify-content: center;
 }
 
 .cell {
@@ -61,4 +65,7 @@ body {
     font-size: xx-large;
     height: 2rem;
     width: 2rem;
+    border: none;
+    background-color: white;
+    color: black;
 }

@@ -85,8 +85,8 @@ const GameController = function (display, board) {
     let currentPlayer = players[currentPlayerIndex];
 
     const init = () => {
-        const p1 = createPlayer('Player 1', 'x');
-        const p2 = createPlayer('Player 2', 'o');
+        const p1 = createPlayer('Player 1', 'X');
+        const p2 = createPlayer('Player 2', 'O');
         document.querySelector('#p1 > .symbol').textContent = `${p1.mark}`;
         document.querySelector('#p2 > .symbol').textContent = `${p2.mark}`;
         document.querySelector('#p1-name').onchange = (e) => {
@@ -115,6 +115,7 @@ const GameController = function (display, board) {
     const playTurn = (xstr, ystr) => {
         const x = Number.parseInt(xstr);
         const y = Number.parseInt(ystr);
+
         currentPlayer = players[currentPlayerIndex];
         display.updateResult(`${currentPlayer.getName()}'s turn`)
 
@@ -125,7 +126,7 @@ const GameController = function (display, board) {
             display.disableCells();
             display.updateResult(`${currentPlayer.getName()} (${currentPlayer.mark}) wins`);
         }
-        console.log(currentPlayer.name);
+
         currentPlayerIndex = (currentPlayerIndex + 1) % 2;
     }
 
