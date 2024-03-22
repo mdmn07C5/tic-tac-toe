@@ -84,37 +84,59 @@ const GameController = function (display, board) {
     let currentPlayerIndex = Math.round(Math.random());
     let currentPlayer = players[currentPlayerIndex];
 
-    const newRound = (player1, player2) => {
+    const init = () => {
+        const p1 = createPlayer('Player 1', 'x');
+        const p2 = createPlayer('Player 2', 'o');
+        document.querySelector('#p1 > .symbol').textContent = `${p1.mark}`;
+        document.querySelector('#p2 > .symbol').textContent = `${p2.mark}`;
+        document.querySelector('#p1-name').onchange = (e) => {
+            p1.setName(e.target.value);
+        };
+        document.querySelector('#p2-name').onchange = (e) => {
+            p2.setName(e.target.value);
+        };
+        document.querySelector('#new-game-button')
+            .addEventListener('click', () => {
+                newRound();
+            });
+
+        players = [p1, p2];
+        display.initBoard(playTurn);
+        display.updateResult(`${players[currentPlayerIndex].getName()} starts`);
+    }
+
+    const newRound = () => {
         board.newBoard();
-        display.initBoard(playTurn)
-        players = [player1, player2];
+        display.initBoard(playTurn);
         currentPlayerIndex = Math.round(Math.random());
-        display.updateResult(`${players[currentPlayerIndex].name} starts`)
+        display.updateResult(`${players[currentPlayerIndex].getName()} starts`);
     }
 
     const playTurn = (xstr, ystr) => {
         const x = Number.parseInt(xstr);
         const y = Number.parseInt(ystr);
         currentPlayer = players[currentPlayerIndex];
-        display.updateResult(`${currentPlayer.name}'s turn`)
+        display.updateResult(`${currentPlayer.getName()}'s turn`)
 
         board.markPosition(currentPlayer.mark, x, y);
         display.updateCell(currentPlayer.mark, x, y);
 
         if (board.isWon(currentPlayer.mark, x, y)) {
             display.disableCells();
-            display.updateResult(`${currentPlayer.name} (${currentPlayer.mark}) wins`);
+            display.updateResult(`${currentPlayer.getName()} (${currentPlayer.mark}) wins`);
         }
-
+        console.log(currentPlayer.name);
         currentPlayerIndex = (currentPlayerIndex + 1) % 2;
     }
 
-    return { newRound, playTurn }
+    return { newRound, playTurn, init }
 }(DisplayController, Gameboard);
 
-function createPlayer (name, mark) {
+
+function createPlayer (initialName, mark) {
     let score = 0;
-    
+    let name = initialName;
+
     const getScore = () => { return score };
 
     const increaseScore = () => {
@@ -125,11 +147,12 @@ function createPlayer (name, mark) {
         name = newName;
     }
 
-    return { name, increaseScore, getScore, mark, setName }
+    const getName = () => {
+        return name;
+    }
+
+    return { increaseScore, getScore, mark, setName, getName }
 };
 
-GameController.newRound(createPlayer('p1', 'x'), createPlayer('p2', 'o'));
 
-document.querySelector('#new-game-button').addEventListener('click', () => {
-    GameController.newRound(createPlayer('p1', 'x'), createPlayer('p2', 'o'));
-})
+GameController.init();
