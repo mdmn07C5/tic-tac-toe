@@ -38,6 +38,7 @@ const Gameboard = function () {
 
 const DisplayController = function () {
     const displayGameBoard = document.querySelector("#game-board");
+    const resultContainer = document.querySelector("#header");
     
     const initBoard = (gameEvent) => {
         for (let i = 0; i < 3; i++) {
@@ -68,7 +69,11 @@ const DisplayController = function () {
         })
     }
 
-    return { initBoard, updateCell, disableCells }
+    const updateResult = (result) => {
+        resultContainer.textContent = result;
+    }
+
+    return { initBoard, updateCell, disableCells, updateResult }
 
 }();
 
@@ -83,19 +88,21 @@ const GameController = function (display, board) {
         display.initBoard(playTurn)
         players = [player1, player2];
         currentPlayerIndex = Math.round(Math.random());
+        display.updateResult(`${players[currentPlayerIndex].name} starts`)
     }
 
     const playTurn = (xstr, ystr) => {
         const x = Number.parseInt(xstr);
         const y = Number.parseInt(ystr);
         currentPlayer = players[currentPlayerIndex];
+        display.updateResult(`${currentPlayer.name}'s turn`)
 
         board.markPosition(currentPlayer.mark, x, y);
         display.updateCell(currentPlayer.mark, x, y);
 
         if (board.isWon(currentPlayer.mark, x, y)) {
             display.disableCells();
-            console.log(`${currentPlayer.name} (${currentPlayer.mark}) wins`);
+            display.updateResult(`${currentPlayer.name} (${currentPlayer.mark}) wins`);
         }
 
         currentPlayerIndex = (currentPlayerIndex + 1) % 2;
