@@ -39,7 +39,7 @@ const Gameboard = function () {
 const DisplayController = function () {
     const displayGameBoard = document.querySelector("#game-board");
     
-    const initBoard = () => {
+    const initBoard = (gameEvent) => {
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
                 const button = document.createElement('button');
@@ -49,9 +49,7 @@ const DisplayController = function () {
                 displayGameBoard.appendChild(button);
 
                 button.addEventListener('click', () => {
-                    GameController.playTurn(i, j, (mark) => {
-                        updateCell(mark, i, j);
-                    });
+                    gameEvent(i, j);
                     button.disabled = true;
                 });
             }
@@ -75,27 +73,28 @@ const DisplayController = function () {
 }();
 
 
-const GameController = function () {
+const GameController = function (display, board) {
     let players = [];
     let currentPlayerIndex = Math.round(Math.random());
     let currentPlayer = players[currentPlayerIndex];
 
     const newRound = (player1, player2) => {
-        Gameboard.newBoard();
+        board.newBoard();
+        display.initBoard(playTurn)
         players = [player1, player2];
         currentPlayerIndex = Math.round(Math.random());
     }
 
-    const playTurn = (xstr, ystr, callback) => {
+    const playTurn = (xstr, ystr) => {
         const x = Number.parseInt(xstr);
         const y = Number.parseInt(ystr);
         currentPlayer = players[currentPlayerIndex];
 
-        Gameboard.markPosition(currentPlayer.mark, x, y);
-        callback(currentPlayer.mark);
+        board.markPosition(currentPlayer.mark, x, y);
+        display.updateCell(currentPlayer.mark, x, y);
 
-        if (Gameboard.isWon(currentPlayer.mark, x, y)) {
-            DisplayController.disableCells();
+        if (board.isWon(currentPlayer.mark, x, y)) {
+            display.disableCells();
             console.log(`${currentPlayer.name} (${currentPlayer.mark}) wins`);
         }
 
@@ -103,7 +102,7 @@ const GameController = function () {
     }
 
     return { newRound, playTurn }
-}();
+}(DisplayController, Gameboard);
 
 function createPlayer (name, mark) {
     let score = 0;
@@ -117,5 +116,4 @@ function createPlayer (name, mark) {
     return { name, increaseScore, getScore, mark }
 };
 
-DisplayController.initBoard();
 GameController.newRound(createPlayer('p1', 'x'), createPlayer('p2', 'o'));
