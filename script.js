@@ -4,11 +4,13 @@ const Gameboard = function () {
         [' ',' ',' '],
         [' ',' ',' ']
     ]
+    let freeCells = 9;
     
     const newBoard = () => {
         board.forEach(row => {
             row.fill(' ');
         });
+        freeCells = 0;
     }
 
     const printToConsole = () => {
@@ -18,7 +20,10 @@ const Gameboard = function () {
     }
 
     const markPosition = (mark, x, y) => {
-        if (board[x][y] === ' ') board[x][y] = mark;
+        if (board[x][y] === ' ') {
+            board[x][y] = mark;
+            freeCells--;
+        }
     }
 
     const isWon = (mark, x, y) => {
@@ -33,7 +38,11 @@ const Gameboard = function () {
         return rowWin || colWin || diagLWin || diagRWin;
     }
 
-    return { printToConsole, markPosition, isWon, newBoard }
+    const getFreeCells = () => {
+        return freeCells;
+    }
+
+    return { printToConsole, markPosition, isWon, newBoard, getFreeCells }
 }();
 
 const DisplayController = function () {
