@@ -54,7 +54,7 @@ const GameController = function () {
 
         Gameboard.markPosition(currentPlayer.mark, x, y);
         callback(currentPlayer.mark);
-        
+
         if (Gameboard.isWon(currentPlayer.mark, x, y)) {
             
             console.log(`${currentPlayer} (${currentPlayer.mark}) wins`);
@@ -82,6 +82,7 @@ const DisplayController = function (gameController) {
                     gameController.playTurn(i, j, (mark) => {
                         updateCell(mark, i, j);
                     });
+                    button.disabled = true;
                 });
             }
         }
