@@ -73,6 +73,8 @@ const DisplayController = function () {
             for (let j = 0; j < 3; j++) {
                 const button = document.createElement('button');
                 button.classList.add('cell');
+                button.dataset.x = i;
+                button.dataset.y = j;
                 button.textContent = ' ';
                 displayGameBoard.appendChild(button);
             }
