@@ -48,9 +48,9 @@ const GameController = function () {
         currentPlayerIndex = Math.round(Math.random());
     }
 
-    const playTurn = (x, y) => {
-        const x = Number.parseInt(x);
-        const y = Number.parseInt(y);
+    const playTurn = (xstr, ystr) => {
+        const x = Number.parseInt(xstr);
+        const y = Number.parseInt(ystr);
 
         Gameboard.markPosition(currentPlayer.mark, x, y);
         
@@ -65,6 +65,24 @@ const GameController = function () {
     return { newRound, playTurn }
 }();
 
+const DisplayController = function () {
+    const displayGameBoard = document.querySelector("#game-board");
+    
+    const initBoard = () => {
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                const button = document.createElement('button');
+                button.classList.add('cell');
+                button.textContent = ' ';
+                displayGameBoard.appendChild(button);
+            }
+        }
+    }
+
+    return { initBoard }
+
+}();
+
 function createPlayer (name, mark) {
     let score = 0;
     
@@ -77,4 +95,5 @@ function createPlayer (name, mark) {
     return { name, increaseScore, getScore, mark }
 };
 
-Game.newRound(createPlayer('p1', 'x'), createPlayer('p2', 'o'));
+DisplayController.initBoard();
+GameController.newRound(createPlayer('p1', 'x'), createPlayer('p2', 'o'));
