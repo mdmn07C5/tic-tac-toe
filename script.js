@@ -36,6 +36,45 @@ const Gameboard = function () {
     return { printToConsole, markPosition, isWon, newBoard }
 }();
 
+const DisplayController = function () {
+    const displayGameBoard = document.querySelector("#game-board");
+    
+    const initBoard = () => {
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                const button = document.createElement('button');
+                button.classList.add('cell');
+                button.setAttribute('id', `cell-${i}-${j}`)
+                button.textContent = ' ';
+                displayGameBoard.appendChild(button);
+
+                button.addEventListener('click', () => {
+                    GameController.playTurn(i, j, (mark) => {
+                        updateCell(mark, i, j);
+                    });
+                    button.disabled = true;
+                });
+            }
+        }
+    }
+
+    const updateCell = (mark, x, y) => {
+        const cell = document.querySelector(`#cell-${x}-${y}`);
+        cell.textContent = mark;
+    }
+
+    const disableCells = () => {
+        const buttons = displayGameBoard.childNodes;
+        buttons.forEach((button) => {
+            button.disabled = true;
+        })
+    }
+
+    return { initBoard, updateCell, disableCells }
+
+}();
+
+
 const GameController = function () {
     let players = [];
     let currentPlayerIndex = Math.round(Math.random());
@@ -56,8 +95,8 @@ const GameController = function () {
         callback(currentPlayer.mark);
 
         if (Gameboard.isWon(currentPlayer.mark, x, y)) {
-            
-            console.log(`${currentPlayer} (${currentPlayer.mark}) wins`);
+            DisplayController.disableCells();
+            console.log(`${currentPlayer.name} (${currentPlayer.mark}) wins`);
         }
 
         currentPlayerIndex = (currentPlayerIndex + 1) % 2;
@@ -65,37 +104,6 @@ const GameController = function () {
 
     return { newRound, playTurn }
 }();
-
-const DisplayController = function (gameController) {
-    const displayGameBoard = document.querySelector("#game-board");
-    
-    const initBoard = () => {
-        for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < 3; j++) {
-                const button = document.createElement('button');
-                button.classList.add('cell');
-                button.setAttribute('id', `cell-${i}-${j}`)
-                button.textContent = ' ';
-                displayGameBoard.appendChild(button);
-
-                button.addEventListener('click', () => {
-                    gameController.playTurn(i, j, (mark) => {
-                        updateCell(mark, i, j);
-                    });
-                    button.disabled = true;
-                });
-            }
-        }
-    }
-
-    const updateCell = (mark, x, y) => {
-        const cell = document.querySelector(`#cell-${x}-${y}`);
-        cell.textContent = mark;
-    }
-
-    return { initBoard, updateCell }
-
-}(GameController);
 
 function createPlayer (name, mark) {
     let score = 0;
