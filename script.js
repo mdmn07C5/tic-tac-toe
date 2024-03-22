@@ -10,7 +10,7 @@ const Gameboard = function () {
         board.forEach(row => {
             row.fill(' ');
         });
-        freeCells = 0;
+        freeCells = 9;
     }
 
     const printToConsole = () => {
@@ -126,14 +126,18 @@ const GameController = function (display, board) {
         const y = Number.parseInt(ystr);
 
         currentPlayer = players[currentPlayerIndex];
-        display.updateResult(`${currentPlayer.getName()}'s turn`)
+        display.updateResult(`${currentPlayer.getName()}'s turn...`)
 
         board.markPosition(currentPlayer.mark, x, y);
         display.updateCell(currentPlayer.mark, x, y);
 
         if (board.isWon(currentPlayer.mark, x, y)) {
             display.disableCells();
-            display.updateResult(`${currentPlayer.getName()} (${currentPlayer.mark}) wins`);
+            display.updateResult(`${currentPlayer.getName()} (${currentPlayer.mark}) wins!`);
+        }
+
+        if (board.getFreeCells() === 0) {
+            display.updateResult(`It's a tie!`);
         }
 
         currentPlayerIndex = (currentPlayerIndex + 1) % 2;
