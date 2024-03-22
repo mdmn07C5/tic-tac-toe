@@ -73,15 +73,19 @@ const DisplayController = function () {
             for (let j = 0; j < 3; j++) {
                 const button = document.createElement('button');
                 button.classList.add('cell');
-                button.dataset.x = i;
-                button.dataset.y = j;
+                button.setAttribute('id', `cell-${i}-${j}`)
                 button.textContent = ' ';
                 displayGameBoard.appendChild(button);
             }
         }
     }
 
-    return { initBoard }
+    const updateCell = (mark, x, y) => {
+        const cell = document.querySelector(`#cell-${x}-${y}`);
+        cell.textContent = mark;
+    }
+
+    return { initBoard, updateCell }
 
 }();
 
